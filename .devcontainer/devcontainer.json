@@ -1,0 +1,5 @@
+{
+  "name": "governed upload-pages-artifact fork",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "remoteUser": "vscode"
+}

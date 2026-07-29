@@ -13,6 +13,9 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
@@ -22,7 +25,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
     - name: Generate files
       run: mkdir artifact && mkdir artifact2 && cd artifact && ../script/new-artifact.sh
@@ -35,7 +38,7 @@ jobs:
         path: artifact
 
     - name: Download artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
       with:
           name: pages-artifact-${{ matrix.os }}
           path: artifact2
@@ -46,6 +49,13 @@ jobs:
 
     - name: Check for absence of hidden files
       run: if [ $(find artifact2 -regex ".*/\..*" | wc -l) != 0 ]; then echo "Hidden files found"; exit 1; fi
+      shell: bash
+
+    - name: Normalize expected dereferenced links
+      run: |
+        rm -rf artifact/bonjour.txt artifact/subdir-link
+        cp artifact/hello.txt artifact/bonjour.txt
+        cp -R artifact/subdir artifact/subdir-link
       shell: bash
 
     - name: Compare files
@@ -66,7 +76,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
     - name: Generate files
       run: mkdir artifact && mkdir artifact2 && cd artifact && ../script/new-artifact.sh
@@ -80,7 +90,7 @@ jobs:
         include-hidden-files: true
 
     - name: Download artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
       with:
           name: pages-artifact-hidden-${{ matrix.os }}
           path: artifact2
@@ -91,6 +101,13 @@ jobs:
 
     - name: Check for presence of hidden files
       run: if [ $(find artifact2 -regex ".*/\..*" | wc -l) == 0 ]; then echo "Hidden files not found"; exit 1; fi
+      shell: bash
+
+    - name: Normalize expected dereferenced links
+      run: |
+        rm -rf artifact/bonjour.txt artifact/subdir-link
+        cp artifact/hello.txt artifact/bonjour.txt
+        cp -R artifact/subdir artifact/subdir-link
       shell: bash
 
     - name: Compare files
