@@ -51,6 +51,13 @@ jobs:
       run: if [ $(find artifact2 -regex ".*/\..*" | wc -l) != 0 ]; then echo "Hidden files found"; exit 1; fi
       shell: bash
 
+    - name: Normalize expected dereferenced links
+      run: |
+        rm -rf artifact/bonjour.txt artifact/subdir-link
+        cp artifact/hello.txt artifact/bonjour.txt
+        cp -R artifact/subdir artifact/subdir-link
+      shell: bash
+
     - name: Compare files
       run: |
         rm artifact/.hidden
@@ -94,6 +101,13 @@ jobs:
 
     - name: Check for presence of hidden files
       run: if [ $(find artifact2 -regex ".*/\..*" | wc -l) == 0 ]; then echo "Hidden files not found"; exit 1; fi
+      shell: bash
+
+    - name: Normalize expected dereferenced links
+      run: |
+        rm -rf artifact/bonjour.txt artifact/subdir-link
+        cp artifact/hello.txt artifact/bonjour.txt
+        cp -R artifact/subdir artifact/subdir-link
       shell: bash
 
     - name: Compare files
