@@ -1,0 +1,15 @@
+name: GHOS hostile unregistered inert probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inert:
+    if: ${{ github.repository == 'invalid/invalid' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Inert marker
+        run: echo "This job must never execute; routing enforcement should reject the unregistered workflow."
